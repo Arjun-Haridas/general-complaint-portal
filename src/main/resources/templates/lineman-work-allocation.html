@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lineman Work Allocation</title>
+    <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+
+    </style>
+</head>
+<body>
+<h2>Welcome Line Man</h2>
+<div th:replace="~{navbar-lineman :: common-navbar}"></div>
+<div>
+    <table align="center" border="1">
+        <h2>Allocation Details</h2>
+        <tr>
+            <th>
+                Sl no
+            </th>
+            <th>
+                Allocation no
+            </th>
+            <th>
+                Complaint No
+            </th>
+            <th>
+                Complaint Date
+            </th>
+            <th>
+                Consumer Name
+            </th>
+            <th>
+                Phone no
+            </th>
+            <th>
+                Location
+            </th>
+            <th>
+                Post no
+            </th>
+            <th>
+                Complaint
+            </th>
+            <th>
+                Status updated on
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Edit Status
+            </th>
+        </tr>
+        <tr th:each="workAllocationForm, iterStat : ${workAllocationForms}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${workAllocationForm.work_alloc_id}"></td>
+            <td th:text="${workAllocationForm.complaint_id}"></td>
+            <td th:text="${workAllocationForm.complaint_date}"></td>
+            <td th:text="${workAllocationForm.consumer_name}"></td>
+            <td th:text="${workAllocationForm.consumer_phone}"></td>
+            <td th:text="${workAllocationForm.complaint_location}"></td>
+            <td th:text="${workAllocationForm.complaint_post_no}"></td>
+            <td th:text="${workAllocationForm.complaint_details}"></td>
+            <td th:text="${workAllocationForm.complaint_status_updated_date}"></td>
+            <td th:text="${workAllocationForm.complaint_status}"></td>
+            <td>
+                <a th:href="@{/complaint/edit/status/{id}(id=${workAllocationForm.complaint_id})}">Edit Status</a>
+                <!--<input type="hidden" th:field="*{workAllocationForm.complaint_id}" />-->
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

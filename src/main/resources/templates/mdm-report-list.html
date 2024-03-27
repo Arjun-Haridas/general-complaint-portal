@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report List</title>
+    <style>
+        h2 {text-align:center;}
+    </style>
+</head>
+<body>
+<h2>Report List</h2>
+<div th:replace="~{navbar-manager :: common-navbar}"></div>
+<div>
+    <ul>
+        <li>
+            <a href="/view-material-request-report">Material Request Report</a>
+        </li>
+        <li>
+            <a href="/material-issue-report">Material Issue Report</a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Complaint Registration</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+    </style>
+</head>
+<body>
+    <h2>Welcome Administrator</h2>
+    <header th:replace="~{navbar :: common-navbar}"></header>
+
+    <h2>New Complaint Registration</h2>
+    <form th:action="@{/complaint/submit}" method="post" th:object="${complaint}">
+        <input type="hidden" th:field="*{complaint_id}" />
+        <input type="hidden" th:field="*{complaint_status_updated_by}" />
+        <div>
+            <table align="center" border="2" >
+                <tr>
+                    <td>
+                        Date:
+                    </td>
+                    <td>
+                        <input type="date" th:field="*{complaint_date}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Consumer Name:
+                    </td>
+                    <td>
+                        <select th:field="*{consumer_kseb_id}">
+                            <option th:value="0">--select--</option>
+                            <option th:each="consumerDetail : ${consumerDetails}" th:value="${consumerDetail.get('kseb_id')}" th:text="${consumerDetail.get('first_name')} + '(' + ${consumerDetail.get('kseb_id')} + ')'"></option>
+                        </select>
+                        <!--<input type="text" th:field="*{consumer_kseb_id}">-->
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Phone Number:
+                    </td>
+                    <td>
+                        <input type="number" th:field="*{complaint_phone_no}"required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Location:
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{complaint_location}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Post Number:
+                    </td>
+                    <td>
+                        <input type="number" th:field="*{complaint_post_no}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Complaint:
+                    </td>
+                    <td>
+                        <textarea type="text" th:field="*{complaint_details}" rows="5" cols="25" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit">Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+
+    <div>
+        <table align="center" border="1">
+            <h2>Complaints</h2>
+            <tr>
+                <th>
+                    Sl no
+                </th>
+                <th>
+                    Complaint no
+                </th>
+                <th>
+                    Complaint Date
+                </th>
+                <th>
+                    Consumer Name
+                </th>
+                <th>
+                    Consumer Number
+                </th>
+                <th>
+                    Phone no
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    Post no
+                </th>
+                <th>
+                    Complaint
+                </th>
+                <th>
+                    Status updated on
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Status Details
+                </th>
+                <th colspan="2">
+                    Actions
+                </th>
+            </tr>
+            <tr th:each="complaint, iterStat : ${complaints}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${complaint.complaint_id}"></td>
+                <td th:text="${complaint.complaint_date}"></td>
+                <td th:text="${complaint.consumer_name}"></td>
+                <td th:text="${complaint.consumer_kseb_id}"></td>
+                <td th:text="${complaint.complaint_phone_no}"></td>
+                <td th:text="${complaint.complaint_location}"></td>
+                <td th:text="${complaint.complaint_post_no}"></td>
+                <td th:text="${complaint.complaint_details}"></td>
+                <td th:text="${complaint.complaint_status_updated_date}"></td>
+                <td th:text="${complaint.complaint_status}"></td>
+                <td th:text="${complaint.complaint_status_details}"></td>
+                <td>
+                    <a th:href="@{/complaint/edit/{id}(id=${complaint.complaint_id})}">Edit</a>
+                </td>
+                <td>
+                    <a th:href="@{/complaint/delete/{complaint_id}(complaint_id=${complaint.complaint_id})}">Delete</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+</body>
+</html>

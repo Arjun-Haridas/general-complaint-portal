@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Complaint Registration</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+    </style>
+</head>
+<body>
+    <h2>Welcome Administrator</h2>
+    <header th:replace="~{navbar :: common-navbar}"></header>
+
+    <div>
+        <table align="center" border="1">
+            <h2>Complaint Report</h2>
+            <tr>
+                <th>
+                    Sl no
+                </th>
+                <th>
+                    Complaint no
+                </th>
+                <th>
+                    Complaint Date
+                </th>
+                <th>
+                    Consumer Name
+                </th>
+                <th>
+                    Consumer Number
+                </th>
+                <th>
+                    Phone no
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    Post no
+                </th>
+                <th>
+                    Complaint
+                </th>
+                <th>
+                    Status updated on
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Status Details
+                </th>
+            </tr>
+            <tr th:each="complaint, iterStat : ${complaints}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${complaint.complaint_id}"></td>
+                <td th:text="${complaint.complaint_date}"></td>
+                <td th:text="${complaint.consumer_name}"></td>
+                <td th:text="${complaint.consumer_kseb_id}"></td>
+                <td th:text="${complaint.complaint_phone_no}"></td>
+                <td th:text="${complaint.complaint_location}"></td>
+                <td th:text="${complaint.complaint_post_no}"></td>
+                <td th:text="${complaint.complaint_details}"></td>
+                <td th:text="${complaint.complaint_status_updated_date}"></td>
+                <td th:text="${complaint.complaint_status}"></td>
+                <td th:text="${complaint.complaint_status_details}"></td>
+            </tr>
+        </table>
+    </div>
+
+
+</body>
+</html>

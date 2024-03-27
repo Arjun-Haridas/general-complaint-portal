@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+  <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+    </style>
+</head>
+<body>
+<h2>Payment Reports</h2>
+<div th:replace="~{navbar :: common-navbar}"></div>
+    <div>
+      <table align="center" border="1">
+        <h2>Payment Details</h2>
+        <tr>
+          <th>
+            Sl no
+          </th>
+          <th>
+            Payment no
+          </th>
+          <th>
+            Date
+          </th>
+          <th>
+            Allocation number
+          </th>
+          <th>
+            Payment Amount
+          </th>
+          <th>
+            Payment Details
+          </th>
+        </tr>
+        <tr th:each="payment, iterStat : ${payments}">
+          <td th:text="${iterStat.count}"></td>
+          <td th:text="${payment.payment_bill_id}"></td>
+          <td th:text="${payment.payment_bill_date}"></td>
+          <td th:text="${payment.work_alloc_id}"></td>
+          <td th:text="${payment.payment_bill_amount}"></td>
+          <td th:text="${payment.payment_bill_details}"></td>
+        </tr>
+      </table>
+    </div>
+
+</body>
+</html>

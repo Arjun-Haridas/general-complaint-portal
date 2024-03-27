@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>KSEB Staff Login</title>
+  <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+
+    </style>
+</head>
+<body>
+<h2>KSEB Staff Login</h2>
+<form th:action="@{/login}" method="post" th:object="${staff}">
+  <div th:if="${loginError}" th:text="${loginError}" style="color: red;"></div>
+  <div>
+    <table align="center" border="2">
+      <tr>
+        <td>
+          User Name:
+        </td>
+        <td>
+          <input type="text" th:field="*{username}" required>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Password:
+        </td>
+        <td>
+          <input type="password" th:field="*{password}" required>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Designation:
+        </td>
+        <td>
+          <select th:field="*{design_id}">
+            <option th:value="0">--select--</option>
+            <option th:each="designation : ${designations}" th:value="${designation.design_id}" th:text="${designation.designation}"></option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button type="submit">Login</button>
+          <a th:href="@{/signup}">Sign Up</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</form>
+</body>
+</html>

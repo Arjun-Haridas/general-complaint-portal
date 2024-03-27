@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Material Request Details</title>
+  <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+
+    </style>
+</head>
+<body>
+<h2>Welcome Material Depo Manager</h2>
+<div th:replace="~{navbar-manager :: common-navbar}"></div>
+<form th:action="@{/material/issue}" method="post" th:object="${materialIssue}">
+    <input type="hidden" th:field="*{material_request_id}" />
+    <div>
+        <table align="center" border="2" >
+            <h2> Material Issue</h2>
+            <tr>
+                <td>
+                    Date:
+                </td>
+                <td>
+                    <input type="date" th:field="*{material_issue_status_updated_date}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Material Request Number:
+                </td>
+                <td>
+                    <label th:text="*{material_request_id}"/>
+                </td>
+            </tr>
+            <!--<tr>
+                <td>
+                    Remarks:
+                </td>
+                <td>
+                    <textarea type="text" th:field="*{}" rows="5" cols="25"></textarea>
+                </td>
+            </tr>-->
+
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Issue</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+<div>
+    <table align="center" border="1">
+        <h2>Material Issued Details</h2>
+        <tr>
+            <th>
+                Sl no
+            </th>
+            <th>
+                Material Issue Number
+            </th>
+            <th>
+                Material Request Number
+            </th>
+            <th>
+                Issued Quantity
+            </th>
+            <th>
+                Status Updated on
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Status Details
+            </th>
+        </tr>
+        <tr th:each="materialIssue, iterStat : ${materialIssues}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${materialIssue.material_issue_id}"></td>
+            <td th:text="${materialIssue.material_request_id}"></td>
+            <td th:text="${materialIssue.material_issued_qty}"></td>
+            <td th:text="${materialIssue.material_issue_status_updated_date}"></td>
+            <td th:text="${materialIssue.material_issued_status}"></td>
+            <td th:text="${materialIssue.material_issued_status_details}"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KSEB Staff Registration</title>
+    <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+
+    </style>
+</head>
+<body>
+    <h2>KSEB Staff Registration</h2>
+    <form th:action="@{/register}" method="post" th:object="${staff}">
+        <div>
+            <table align="center" border="2">
+                <tr>
+                    <td>
+                        First Name:
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{firstName}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Last Name:
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{lastName}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        User Name:
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{username}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Password:
+                    </td>
+                    <td>
+                        <input type="password" th:field="*{password}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Address:
+                    </td>
+                    <td>
+                        <textarea th:field="*{address}" rows="10" cols="30"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Phone:
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{phone}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Email:
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{email}" required>
+                    </td>
+                </tr>
+               <!-- <tr>
+                    <td>
+                        Designation id:
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{design_id}">
+                    </td>
+                </tr>-->
+
+                <tr>
+                    <td>
+                        Designation:
+                    </td>
+                    <td>
+                        <select th:field="*{design_id}" required>
+                            <option th:value="0">--select--</option>
+                            <option th:each="designation : ${designations}" th:value="${designation.design_id}" th:text="${designation.designation}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit">Register</button>
+                        <a th:href="@{/home}">Login</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+</body>
+</html>

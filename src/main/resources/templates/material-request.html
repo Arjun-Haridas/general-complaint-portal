@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Material Request</title>
+    <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+    </style>
+</head>
+<body>
+<h2>Welcome Line Man</h2>
+<div th:replace="~{navbar-lineman :: common-navbar}"></div>
+<form th:action="@{/material-request-submit}" method="post" th:object="${materialRequest}">
+    <input type="hidden" th:field="*{material_request_id}" />
+    <div>
+        <table align="center" border="2" >
+            <h2>New Material Request</h2>
+            <tr>
+                <td>
+                    Date:
+                </td>
+                <td>
+                    <input type="date" th:field="*{material_request_date}" required>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Allocation Number:
+                </td>
+                <td>
+                    <select th:field="*{work_alloc_id}" required>
+                        <option th:value="0">--select--</option>
+                        <option th:each="workAllocDetail : ${workAllocDetails}" th:value="${workAllocDetail.get('work_alloc_id')}" th:text="${workAllocDetail.get('work_alloc_id')}"></option>
+                    </select>
+                </td>
+                <!--<td>
+                <input type="text" th:field="*{work_alloc_id}">
+                </td>-->
+            </tr>
+            <tr>
+                <td>
+                    <label> Material Details</label>
+                <td>
+                    <select th:field="*{materialItemId}" required>
+                        <option th:value="0">--select--</option>
+                        <option th:each="materialItem : ${materialItems}" th:value="${materialItem.get('material_item_id')}" th:text="${materialItem.get('material_item_name')}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Material Quantity:
+                </td>
+                <td>
+                    <input type="text" th:field="*{material_request_qty}" required>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Save</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
+
+<div>
+    <table align="center" border="1">
+        <h2>Material Request Details</h2>
+        <tr>
+            <th>
+                Sl no
+            </th>
+            <th>
+                Material Request no
+            </th>
+            <th>
+                Request Date
+            </th>
+            <th>
+                Allocation number
+            </th>
+            <th>
+                Material Details
+            </th>
+            <th>
+                Material Quantity
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Edit
+            </th>
+        </tr>
+        <tr th:each="materialRequest, iterStat : ${materialRequests}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${materialRequest.material_request_id}"></td>
+            <td th:text="${materialRequest.material_request_date}"></td>
+            <td th:text="${materialRequest.work_alloc_id}"></td>
+            <td th:text="${materialRequest.material_type}"></td>
+            <td th:text="${materialRequest.material_request_qty}"></td>
+            <td th:text="${materialRequest.material_request_status}"></td>
+            <td>
+                <a th:href="@{/materialRequest/edit/{id}(id=${materialRequest.material_request_id})}">Edit</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

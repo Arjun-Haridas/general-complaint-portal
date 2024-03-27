@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report List</title>
+    <style>
+        h2 {text-align:center;}
+    </style>
+</head>
+<body>
+<h2>Report List</h2>
+<!--<div th:replace="~{navbar :: common-navbar}"></div>-->
+<div th:replace="${headerName} :: common-navbar"></div>
+<div>
+    <ul>
+        <li>
+            <a href="/complaint/complaint-report-view">Complaint Report</a>
+        </li>
+        <li>
+            <a href="/view-work-report">Work Report</a>
+        </li>
+        <li>
+            <a href="/view-material-report">Material Report</a>
+        </li>
+        <li>
+            <a href="/view-payment-report">Payment Report</a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

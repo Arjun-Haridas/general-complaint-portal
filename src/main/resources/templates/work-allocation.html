@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Work Allocation</title>
+    <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+
+    </style>
+</head>
+<body>
+<h2>Welcome Administrator</h2>
+<header th:replace="~{navbar :: common-navbar}"></header>
+<h2>New Work Allocation</h2>
+    <form th:action="@{/workallocationsubmit}" method="post" th:object="${workAllocation}">
+        <input type="hidden" th:field="*{work_alloc_id}" />
+        <div>
+            <table align="center" border="2">
+                <tr>
+                    <td>
+                        Date:
+                    </td>
+                    <td>
+                        <input type="date" th:field="*{work_alloc_date}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Complaint:
+                    </td>
+                    <td>
+                        <select th:field="*{complaint_id}">
+                            <option th:value="0">--select--</option>
+                            <option th:each="complaintDetail : ${complaintDetails}" th:value="${complaintDetail.get('complaint_id')}" th:text="${complaintDetail.get('complaint')} + '(' + ${complaintDetail.get('complaint_id')} + ')'"></option>
+                        </select>
+                    </td>
+                    <!--<td>
+                        <input type="text" th:field="*{complaint_id}">
+                    </td>-->
+                </tr>
+                <tr>
+                    <td>
+                        <label> Line Man</label>
+                    <td>
+                        <select th:field="*{staff_id}">
+                            <option th:value="0">--select--</option>
+                            <option th:each="linemanDetail : ${linemanDetails}" th:value="${linemanDetail.get('staff_id')}" th:text="${linemanDetail.get('firstname')} + '(' + ${linemanDetail.get('staff_id')} + ')'"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit">Save</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
+    <div>
+        <table align="center" border="2">
+            <h2>Today's Allocation Details</h2>
+            <tr>
+                <th>
+                    Sl no
+                </th>
+                <th>
+                    Allocation no
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Complaint
+                </th>
+                <th>
+                    Line Man
+                </th>
+                <th>
+                    Edit
+                </th>
+
+            </tr>
+            <tr th:each="workAllocation, iterStat : ${workAllocations}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${workAllocation.work_alloc_id}"></td>
+                <td th:text="${workAllocation.work_alloc_date}"></td>
+                <td th:text="${workAllocation.complaint} + ' (' + ${workAllocation.complaint_id} + ')'"></td>
+                <td th:text="${workAllocation.staffName} + ' (' + ${workAllocation.staff_id} + ')'"></td>
+                <td>
+                    <a th:href="@{/workAllocation/edit/{id}(id=${workAllocation.work_alloc_id})}">Edit</a>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+  <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+    </style>
+</head>
+<body>
+<h2>Welcome Material Depo Manager</h2>
+<div th:replace="~{navbar-manager :: common-navbar}"></div>
+      <form  th:action="@{/payment-manager-submit}" method="post" th:object="${payment}">
+        <input type="hidden" th:field="*{payment_bill_id}" />
+        <div>
+          <table align="center" border="2" >
+            <h2>Payments</h2>
+            <tr>
+              <td>
+                Date:
+              </td>
+              <td>
+                <input type="date" th:field="*{payment_bill_date}" required>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Allocation Number:
+              </td>
+              <td>
+                <select th:field="*{work_alloc_id}" required>
+                  <option th:value="0">--select--</option>
+                  <option th:each="workAllocDetail : ${workAllocDetails}" th:value="${workAllocDetail.get('work_alloc_id')}" th:text="${workAllocDetail.get('work_alloc_id')}"></option>
+                </select>
+              </td>
+              <!--<td>
+                <input type="text" th:field="*{work_alloc_id}" required>
+              </td>-->
+            </tr>
+            <tr>
+              <td>
+                Payment Amount:
+              </td>
+              <td>
+                <input type="text" th:field="*{payment_bill_amount}" required>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Payment Details:
+              </td>
+              <td>
+                <textarea type="text" th:field="*{payment_bill_details}" rows="5" cols="25" required></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <button type="submit">Save</button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </form>
+
+    <div>
+      <table align="center" border="1">
+        <h2>Payment Details</h2>
+        <tr>
+          <th>
+            Sl no
+          </th>
+          <th>
+            Payment no
+          </th>
+          <th>
+            Date
+          </th>
+          <th>
+            Allocation number
+          </th>
+          <th>
+            Payment Amount
+          </th>
+          <th>
+            Payment Details
+          </th>
+          <th>
+            Edit
+          </th>
+        </tr>
+        <tr th:each="payment, iterStat : ${payments}">
+          <td th:text="${iterStat.count}"></td>
+          <td th:text="${payment.payment_bill_id}"></td>
+          <td th:text="${payment.payment_bill_date}"></td>
+          <td th:text="${payment.work_alloc_id}"></td>
+          <td th:text="${payment.payment_bill_amount}"></td>
+          <td th:text="${payment.payment_bill_details}"></td>
+          <td>
+            <a th:href="@{/payment/manager/edit/{id}(id=${payment.payment_bill_id})}">Edit</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+</body>
+</html>

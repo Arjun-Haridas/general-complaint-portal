@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Status Update</title>
+  <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+    </style>
+</head>
+<body>
+    <h2>Welcome Line Man</h2>
+    <header th:replace="~{navbar-lineman :: common-navbar}"></header>
+
+    <h2>Status Update</h2>
+    <form th:action="@{/complaint/complaintStatus/submit}" method="post" th:object="${complaintStatus}">
+      <input type="hidden" th:field="*{complaint_id}" />
+      <div>
+        <table align="center" border="2" >
+          <tr>
+            <td>
+              Date:
+            </td>
+            <td>
+              <input type="date" th:field="*{complaint_status_updated_date}">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Allocation Number:
+            </td>
+            <td>
+              <label th:text="${allocationId}"></label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label> Status</label>
+            <td>
+            <select th:field="*{selectedStatus}">
+              <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"></option>
+            </select>
+            </td>
+          </tr>
+            <td colspan="2">
+              <button type="submit">Save</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+
+</body>
+</html>

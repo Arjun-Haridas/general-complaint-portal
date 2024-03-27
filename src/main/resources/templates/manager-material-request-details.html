@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Material Request Details</title>
+  <style>
+        h2 {text-align:center;}
+        div {text-align:center;}
+
+    </style>
+</head>
+<body>
+<h2>Welcome Material Depo Manager</h2>
+<div th:replace="~{navbar-manager :: common-navbar}"></div>
+<div>
+    <table align="center" border="1">
+        <h2>Material Request Details</h2>
+        <tr>
+            <th>
+                Sl no
+            </th>
+            <th>
+                Complaint No
+            </th>
+            <th>
+                Complaint Date
+            </th>
+            <th>
+                Customer Name
+            </th>
+            <th>
+                Phone no
+            </th>
+            <th>
+                Location
+            </th>
+            <th>
+                Post no
+            </th>
+            <th>
+                Complaint
+            </th>
+            <th>
+                Complaint status updated on
+            </th>
+            <th>
+                Complaint Status
+            </th>
+            <th>
+                Allocation no
+            </th>
+            <th>
+                Allocation Date
+            </th>
+            <th>
+                Material status updated by
+            </th>
+            <th>
+                Material Request no
+            </th>
+            <th>
+                Request Date
+            </th>
+            <th>
+                Material Details
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Approve
+            </th>
+            <th>
+                Issue
+            </th>
+        </tr>
+        <tr th:each="materialRequest, iterStat : ${materialRequests}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${materialRequest.complaint_id}"></td>
+            <td th:text="${materialRequest.complaint_date}"></td>
+            <td th:text="${materialRequest.consumer_name}"></td>
+            <td th:text="${materialRequest.consumer_phone}"></td>
+            <td th:text="${materialRequest.complaint_location}"></td>
+            <td th:text="${materialRequest.complaint_post_no}"></td>
+            <td th:text="${materialRequest.complaint_details}"></td>
+            <td th:text="${materialRequest.complaint_status_updated_date}"></td>
+            <td th:text="${materialRequest.complaint_status}"></td>
+            <td th:text="${materialRequest.work_alloc_id}"></td>
+            <td th:text="${materialRequest.work_alloc_date}"></td>
+            <td th:text="${materialRequest.staff_name}"></td>
+            <td th:text="${materialRequest.material_request_id}"></td>
+            <td th:text="${materialRequest.material_request_date}"></td>
+            <td th:text="${materialRequest.material_details}"></td>
+            <td th:text="${materialRequest.material_request_status}"></td>
+            <td>
+                <a th:href="@{/materialRequest/mdm/approve/{id}(id=${materialRequest.material_request_id})}">Approve</a>
+            </td>
+            <td>
+                <a th:href="@{/material-issue/{id}(id=${materialRequest.material_request_id})}">Issue</a>
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+</body>
+</html>
