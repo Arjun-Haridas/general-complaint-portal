@@ -9,21 +9,24 @@
 </head>
 <body>
 <h2>Report List</h2>
-<!--<div th:replace="~{navbar :: common-navbar}"></div>-->
 <div th:replace="${headerName} :: common-navbar"></div>
 <div>
     <ul>
         <li>
-            <a href="/complaint/complaint-report-view">Complaint Report</a>
+            <a th:if="${headerName == 'navbar-lineman'}" th:href="@{/complaint/complaint-report-view/__${headerName}__/__${staffId}__}">Complaint Report</a>
+            <a th:if="${headerName != 'navbar-lineman'}" th:href="@{/complaint/complaint-report-view/__${headerName}__}">Complaint Report</a>
         </li>
         <li>
-            <a href="/view-work-report">Work Report</a>
+            <a th:if="${headerName == 'navbar-lineman'}" th:href="@{/view-work-report/__${headerName}__/__${staffId}__}">Work Report</a>
+            <a th:if="${headerName != 'navbar-lineman'}" th:href="@{/view-work-report/__${headerName}__}">Work Report</a>
         </li>
         <li>
-            <a href="/view-material-report">Material Report</a>
+            <a th:if="${headerName == 'navbar-lineman'}" th:href="@{/view-material-report/__${headerName}__/__${staffId}__}">Material Report</a>
+            <a th:if="${headerName != 'navbar-lineman'}" th:href="@{/view-material-report/__${headerName}__}">Material Report</a>
         </li>
         <li>
-            <a href="/view-payment-report">Payment Report</a>
+            <a th:if="${headerName == 'navbar-lineman'}" th:href="@{/view-payment-report/__${headerName}__/__${staffId}__}">Payment Report</a>
+            <a th:if="${headerName != 'navbar-lineman'}" th:href="@{/view-payment-report/__${headerName}__}">Payment Report</a>
         </li>
     </ul>
 </div>

@@ -1,10 +1,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <nav th:fragment="common-navbar">
     <ul style="list-style-type: none; margin: 0; padding: 0; overflow: hidden; background-color: #333;">
-      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" href="/lineman-work-allocation">Work Allocation</a></li>
-      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" href="/material-request">Material Request</a></li>
-      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" href="/payment">Payments</a></li>
-      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" href="/view-report-list/navbar-lineman">Reports</a></li>
+      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" th:href="@{/lineman-work-allocation/{staffId}(staffId=${staffId})}">Work Allocation</a></li>
+      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" th:href="@{/material-request/{staffId}(staffId=${staffId})}">Material Request</a></li>
+      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" th:href="@{/payment/{staffId}(staffId=${staffId})}">Payments</a></li>
+      <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" th:href="@{/view-report-list/navbar-lineman/{staffId}(staffId=${staffId})}">Reports</a></li>
       <li style="float: left;"><a style="display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none;" href="/logout">Logout</a></li>
     </ul>
   </nav>

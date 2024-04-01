@@ -27,6 +27,9 @@ public class MaterialRequestForm {
     private String material_details;
     private String material_request_status;
     private String material_issue_status;
+    private boolean show_approval;
+    private boolean show_issue;
+    private boolean show_ee_approval;
 
     public MaterialRequestForm() {
     }
@@ -196,4 +199,27 @@ public class MaterialRequestForm {
         this.material_issue_status = material_issue_status;
     }
 
+    public boolean isShow_approval() {
+        return show_approval;
+    }
+
+    public void setShow_approval(boolean show_approval) {
+        this.show_approval = show_approval;
+    }
+
+    public boolean isShow_issue() {
+        return show_issue;
+    }
+
+    public void setShow_issue(boolean show_issue) {
+        this.show_issue = show_issue;
+    }
+
+    public boolean isShow_ee_approval() {
+        return show_ee_approval;
+    }
+
+    public void setShow_ee_approval(boolean show_ee_approval) {
+        this.show_ee_approval = show_ee_approval;
+    }
 }

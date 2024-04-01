@@ -93,10 +93,10 @@
             <td th:text="${materialRequest.material_details}"></td>
             <td th:text="${materialRequest.material_request_status}"></td>
             <td>
-                <a th:href="@{/materialRequest/mdm/approve/{id}(id=${materialRequest.material_request_id})}">Approve</a>
+                <a th:if="${materialRequest.show_approval}" th:href="@{/materialRequest/mdm/approve/{id}(id=${materialRequest.material_request_id})}">Approve</a>
             </td>
             <td>
-                <a th:href="@{/material-issue/{id}(id=${materialRequest.material_request_id})}">Issue</a>
+                <a th:if="${materialRequest.show_issue}" th:href="@{/material-issue/{id}(id=${materialRequest.material_request_id})}">Issue</a>
             </td>
         </tr>
 

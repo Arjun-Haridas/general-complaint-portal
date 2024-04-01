@@ -17,6 +17,7 @@ public class WorkAllocationForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date complaint_status_updated_date;
     private String complaint_status;
+    private boolean isMaterialIssued;
 
     public WorkAllocationForm() {
     }
@@ -112,5 +113,13 @@ public class WorkAllocationForm {
 
     public void setComplaint_status(String complaint_status) {
         this.complaint_status = complaint_status;
+    }
+
+    public boolean isMaterialIssued() {
+        return isMaterialIssued;
+    }
+
+    public void setMaterialIssued(boolean materialIssued) {
+        isMaterialIssued = materialIssued;
     }
 }

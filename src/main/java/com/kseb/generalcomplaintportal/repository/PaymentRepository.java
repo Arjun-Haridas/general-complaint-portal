@@ -12,6 +12,10 @@ import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
+    @Query(value = "SELECT work_alloc_id as work_alloc_id FROM kseb.work_allocation where staff_id = :staff_id",
+            nativeQuery = true)
+    List<Tuple> getWorkAllocDetails(@Param("staff_id") int staff_id);
+
     @Query(value = "SELECT work_alloc_id as work_alloc_id FROM kseb.work_allocation",
             nativeQuery = true)
     List<Tuple> getWorkAllocDetails();
@@ -20,4 +24,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     @Transactional
     @Query(value = "DELETE FROM kseb.payment_bill pb WHERE pb.work_alloc_id = :work_alloc_id", nativeQuery = true)
     int deleteByPaymentBillId(@Param("work_alloc_id") int work_alloc_id);
+
+    @Query(value = "SELECT * FROM kseb.payment_bill where work_alloc_id in (select work_alloc_id from kseb.work_allocation where staff_id = :staff_id)",
+            nativeQuery = true)
+    List<Payment> getPaymentsByStaffId(@Param("staff_id") int staff_id);
+
+    @Query(value = "SELECT staff_id FROM kseb.payment_bill py, kseb.work_allocation wa where py.work_alloc_id=wa.work_alloc_id and payment_bill_id=:payment_bill_id", nativeQuery = true)
+    Integer getStaffIdFrmPayment(@Param("payment_bill_id") int payment_bill_id);
 }

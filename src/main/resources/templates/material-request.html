@@ -9,10 +9,11 @@
     </style>
 </head>
 <body>
-<h2>Welcome Line Man</h2>
+<h2>Welcome <span th:text="${staffName} + ' - ' + ${staffId}"></span> (Line Man)</h2>
 <div th:replace="~{navbar-lineman :: common-navbar}"></div>
 <form th:action="@{/material-request-submit}" method="post" th:object="${materialRequest}">
     <input type="hidden" th:field="*{material_request_id}" />
+    <input type="hidden" name="staffId" th:value="${staffId}" />
     <div>
         <table align="center" border="2" >
             <h2>New Material Request</h2>

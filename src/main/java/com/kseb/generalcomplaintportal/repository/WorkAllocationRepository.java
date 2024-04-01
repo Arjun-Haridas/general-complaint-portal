@@ -36,6 +36,11 @@ public interface WorkAllocationRepository extends JpaRepository<WorkAllocation, 
     @Query(value = "DELETE FROM kseb.work_allocation wa WHERE wa.complaint_id = :complaint_id", nativeQuery = true)
     int deleteByWorkAllocationsId(@Param("complaint_id") int complaint_id);
 
+    @Query(value = "SELECT staff_id FROM kseb.work_allocation where work_alloc_id = :work_alloc_id", nativeQuery = true)
+    int getStaffIdFrmWorkAllocationId(@Param("work_alloc_id") int work_alloc_id);
+
+    @Query(value = "SELECT * FROM kseb.work_allocation where staff_id = :staff_id", nativeQuery = true)
+    List<WorkAllocation> getWorkAllocDtlsOnStaffId(@Param("staff_id") int staff_id);
 
     //List<WorkAllocation> getNonAllocatedWorks();
 }

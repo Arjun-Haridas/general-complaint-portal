@@ -10,7 +10,7 @@
     </style>
 </head>
 <body>
-<h2>Welcome Line Man</h2>
+<h2>Welcome <span th:text="${staffName} + ' - ' + ${staffId}"></span> (Line Man)</h2>
 <div th:replace="~{navbar-lineman :: common-navbar}"></div>
 <div>
     <table align="center" border="1">
@@ -66,8 +66,7 @@
             <td th:text="${workAllocationForm.complaint_status_updated_date}"></td>
             <td th:text="${workAllocationForm.complaint_status}"></td>
             <td>
-                <a th:href="@{/complaint/edit/status/{id}(id=${workAllocationForm.complaint_id})}">Edit Status</a>
-                <!--<input type="hidden" th:field="*{workAllocationForm.complaint_id}" />-->
+                <a th:if="${workAllocationForm.isMaterialIssued}" th:href="@{/complaint/edit/status/{id}(id=${workAllocationForm.complaint_id})}">Edit Status</a>
             </td>
         </tr>
     </table>

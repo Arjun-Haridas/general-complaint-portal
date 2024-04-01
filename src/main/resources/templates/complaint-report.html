@@ -10,12 +10,13 @@
     </style>
 </head>
 <body>
-    <h2>Welcome Administrator</h2>
-    <header th:replace="~{navbar :: common-navbar}"></header>
+    <h2>Complaint Report</h2>
+    <!--<header th:replace="~{navbar :: common-navbar}"></header>-->
+    <header th:replace="${headerName} :: common-navbar"></header>
 
     <div>
         <table align="center" border="1">
-            <h2>Complaint Report</h2>
+            <h2>Complaint Details</h2>
             <tr>
                 <th>
                     Sl no

@@ -3,6 +3,7 @@ package com.kseb.generalcomplaintportal.controller;
 import com.kseb.generalcomplaintportal.dto.ComplaintRegistrationForm;
 import com.kseb.generalcomplaintportal.model.Complaint;
 import com.kseb.generalcomplaintportal.model.ComplaintStatus;
+import com.kseb.generalcomplaintportal.model.Staff;
 import com.kseb.generalcomplaintportal.repository.*;
 import com.kseb.generalcomplaintportal.service.StatusService;
 import com.kseb.generalcomplaintportal.service.enums.Status;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/complaint")
@@ -43,6 +45,8 @@ public class ComplaintController {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private StaffRepository staffRepository;
 
     @GetMapping("/registration/{desigFrmDB}")
     public String showComplaintRegistration(@PathVariable("desigFrmDB") int designId, Model model) {
@@ -132,25 +136,6 @@ public class ComplaintController {
         }
         workAllocationRepository.deleteByWorkAllocationsId(Math.toIntExact(id));
 
-
-        /**
-         * workAllocationId = SELECT wa.work_alloc_id FROM kseb.work_allocation wa WHERE wa.complaint_id =
-         * materialReqId = SELECT mr.material_request_id FROM kseb.material_request mr WHERE mr.work_alloc_id =
-         *
-         *
-         * material_issue - material_req_id --- DELETE FROM kseb.material_issue mi WHERE mi.material_request_id =
-         * material-request-status - material_req_id --- DELETE FROM kseb.material_request_status mrs WHERE mrs.material_request_id =
-         *
-         * material-request - work-allocation-id --- DELETE FROM kseb.material_request mr WHERE mr.work_alloc_id =
-         * payment-bill - workallocationid --- DELETE FROM kseb.payment_bill pb WHERE pb.work_alloc_id =
-         *
-         *
-         * work-allocation - complaintid --- DELETE FROM kseb.work_allocation wa WHERE wa.complaint_id =
-         *
-         * comlaint-status - complaintid --- DELETE FROM kseb.complaint_status cs WHERE cs.complaint_id =
-         * complaint - complaintid
-         */
-
         complaintStatusRepository.deleteByComplaintId(Math.toIntExact(id));
         complaintRepository.deleteById(id);
 
@@ -187,26 +172,43 @@ public class ComplaintController {
     public String editComplaintStatus(Model model, @PathVariable("id") Integer complaintId) {
         ComplaintStatus complaintStatus = complaintStatusRepository.getComplaintStatusDetails(complaintId);
         int allocationId = workAllocationRepository.getWorkAllocIdFrmComplaintId(complaintId);
+        int staffId = workAllocationRepository.getStaffIdFrmWorkAllocationId(allocationId);
+
         model.addAttribute("complaintStatus", complaintStatus);
         model.addAttribute("allocationId", allocationId);
         model.addAttribute("statuses", Status.values());
+        model.addAttribute("staffId", staffId);
         return "status-updation";
     }
 
     @PostMapping("/complaintStatus/submit")
-    public  String submitComplaintStatus(@ModelAttribute ComplaintStatus complaintStatus, Model model) {
+    public  String submitComplaintStatus(@ModelAttribute ComplaintStatus complaintStatus, @RequestParam("staffId") String staffId, Model model) {
         ComplaintStatus complaintStatusDtls = complaintStatusRepository.getComplaintStatusDetails(complaintStatus.getComplaint_id());
         complaintStatusDtls.setComplaint_status(complaintStatus.getSelectedStatus());
         complaintStatusDtls.setComplaint_status_details(complaintStatus.getSelectedStatus());
-
         complaintStatusRepository.save(complaintStatusDtls);
-        return "redirect:/lineman-work-allocation";
+        return "redirect:/lineman-work-allocation/" + staffId;
     }
 
-    @GetMapping("/complaint-report-view")
-    public String showComplaintReport(Model model) {
+    @GetMapping("/complaint-report-view/{headerName}")
+    public String showComplaintReport(Model model, @PathVariable("headerName") String pageName) {
         List<ComplaintRegistrationForm> complaintRegistrations = getComplaintRegistrationForms();
+
         model.addAttribute("complaints", complaintRegistrations);
+        model.addAttribute("headerName", pageName);
+        return "complaint-report";
+    }
+
+    @GetMapping("/complaint-report-view/{headerName}/{staffId}")
+    public String showComplaintReportByStaff(Model model, @PathVariable("headerName") String pageName, @PathVariable("staffId") int staffId) {
+        List<ComplaintRegistrationForm> complaintRegistrations = getComplaintRegistrationForms();
+
+        Optional<Staff> staffFrmDB = staffRepository.findById(staffId);
+        Staff staffDtl = staffFrmDB.get();
+        model.addAttribute("staffId", staffDtl.getStaff_id());
+
+        model.addAttribute("complaints", complaintRegistrations);
+        model.addAttribute("headerName", pageName);
         return "complaint-report";
     }
 }

@@ -36,6 +36,9 @@ public class MaterialApprovalController {
     @Autowired
     private MaterialIssueRepository materialIssueRepository;
 
+    @Autowired
+    private StaffRepository staffRepository;
+
     @GetMapping("/engineer-material-request-details")
     public String showEngineerMaterialRequest(Model model) {
         List<MaterialRequestForm> materialRequestForms = getMaterialRequestForms();
@@ -83,6 +86,63 @@ public class MaterialApprovalController {
             String materialItemName = materialRequestRepository.getDetailFrmMaterialItemId(materialRequest.getMaterialItemId());
             materialRequestForm.setMaterial_details(materialItemName);
             materialRequestForm.setMaterial_request_status(materialRequestStatus.getMaterial_request_status());
+
+            boolean showApproval = (materialRequestRepository.showApproval(materialRequest.getMaterial_request_id()) == 0) ? false : true;
+            boolean showIssue = (materialRequestRepository.showIssue(materialRequest.getMaterial_request_id()) == 0) ? false : true;
+            boolean showEEApproval = (materialRequestRepository.showEEApproval(materialRequest.getMaterial_request_id()) == 0) ? false : true;
+
+            materialRequestForm.setShow_approval(showApproval);
+            materialRequestForm.setShow_issue(showIssue);
+            materialRequestForm.setShow_ee_approval(showEEApproval);
+
+            materialRequestForms.add(materialRequestForm);
+        }
+
+        return materialRequestForms;
+    }
+
+
+    private List<MaterialRequestForm> getMaterialRequestFormsByStaffId(int staffId) {
+        List<MaterialRequestForm> materialRequestForms = new ArrayList<>();
+        List<MaterialRequest> materialRequests = materialRequestRepository.getMaterialRequestsByStaffId(staffId);
+        for (MaterialRequest materialRequest : materialRequests) {
+            MaterialRequestForm materialRequestForm = new MaterialRequestForm();
+            MaterialRequestStatus materialRequestStatus = materialRequestStatusRepository.getMaterialStatusDetails(materialRequest.getMaterial_request_id());
+
+            WorkAllocation workAllocation = workAllocationRepository.getWorkAllocationDetails(materialRequest.getWork_alloc_id());
+            Complaint complaint = complaintRepository.getComplaintDetails(workAllocation.getComplaint_id());
+            ComplaintStatus complaintStatus = complaintStatusRepository.getComplaintStatusDetails(workAllocation.getComplaint_id());
+            String consumer_name = complaintRepository.getConsumerNameByKSEBID(complaint.getConsumer_kseb_id());
+
+            materialRequestForm.setComplaint_id(complaint.getComplaint_id());
+            materialRequestForm.setComplaint_date(complaint.getComplaint_date());
+            materialRequestForm.setConsumer_name(consumer_name);
+            materialRequestForm.setConsumer_phone(complaint.getComplaint_phone_no());
+            materialRequestForm.setComplaint_location(complaint.getComplaint_location());
+            materialRequestForm.setComplaint_post_no(complaint.getComplaint_post_no());
+            materialRequestForm.setComplaint_details(complaint.getComplaint_details());
+
+            materialRequestForm.setComplaint_status_updated_date(complaintStatus.getComplaint_status_updated_date());
+            materialRequestForm.setComplaint_status(complaintStatus.getComplaint_status());
+
+            materialRequestForm.setWork_alloc_id(workAllocation.getWork_alloc_id());
+            materialRequestForm.setWork_alloc_date(workAllocation.getWork_alloc_date());
+
+            materialRequestForm.setStaff_name(materialRequestStatus.getMaterial_request_status_updated_by());
+            materialRequestForm.setMaterial_request_id(materialRequest.getMaterial_request_id());
+            materialRequestForm.setMaterial_request_date(materialRequest.getMaterial_request_date());
+
+            String materialItemName = materialRequestRepository.getDetailFrmMaterialItemId(materialRequest.getMaterialItemId());
+            materialRequestForm.setMaterial_details(materialItemName);
+            materialRequestForm.setMaterial_request_status(materialRequestStatus.getMaterial_request_status());
+
+            boolean showApproval = (materialRequestRepository.showApproval(materialRequest.getMaterial_request_id()) == 0) ? false : true;
+            boolean showIssue = (materialRequestRepository.showIssue(materialRequest.getMaterial_request_id()) == 0) ? false : true;
+            boolean showEEApproval = (materialRequestRepository.showEEApproval(materialRequest.getMaterial_request_id()) == 0) ? false : true;
+
+            materialRequestForm.setShow_approval(showApproval);
+            materialRequestForm.setShow_issue(showIssue);
+            materialRequestForm.setShow_ee_approval(showEEApproval);
 
             materialRequestForms.add(materialRequestForm);
         }
@@ -140,8 +200,8 @@ public class MaterialApprovalController {
         return "redirect:/engineer-material-request-details";
     }
 
-    @GetMapping("/view-material-report")
-    public String viewMaterialReport(Model model) {
+    @GetMapping("/view-material-report/{headerName}")
+    public String viewMaterialReport(Model model, @PathVariable("headerName") String pageName) {
         List<MaterialRequestForm> materialRequestForms = getMaterialRequestForms();
 
         for (MaterialRequestForm mr : materialRequestForms) {
@@ -150,6 +210,25 @@ public class MaterialApprovalController {
         }
 
         model.addAttribute("materialRequests", materialRequestForms);
+        model.addAttribute("headerName", pageName);
+        return "material-report";
+    }
+
+    @GetMapping("/view-material-report/{headerName}/{staffId}")
+    public String viewMaterialReportByStaff(Model model, @PathVariable("headerName") String pageName, @PathVariable("staffId") int staffId) {
+        List<MaterialRequestForm> materialRequestForms = getMaterialRequestFormsByStaffId(staffId);
+
+        for (MaterialRequestForm mr : materialRequestForms) {
+            String issueStatus = materialIssueRepository.getIssueStatusFrmMaterialRequestId(mr.getMaterial_request_id());
+            mr.setMaterial_issue_status(issueStatus);
+        }
+
+        Optional<Staff> staffFrmDB = staffRepository.findById(staffId);
+        Staff staffDtl = staffFrmDB.get();
+        model.addAttribute("staffId", staffDtl.getStaff_id());
+
+        model.addAttribute("materialRequests", materialRequestForms);
+        model.addAttribute("headerName", pageName);
         return "material-report";
     }
 

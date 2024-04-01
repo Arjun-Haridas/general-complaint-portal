@@ -9,7 +9,7 @@
     </style>
 </head>
 <body>
-<h2>Welcome Line Man</h2>
+<h2>Welcome <span th:text="${staffName} + ' - ' + ${staffId}"></span> (Line Man)</h2>
 <div th:replace="~{navbar-lineman :: common-navbar}"></div>
 </body>
 </html>

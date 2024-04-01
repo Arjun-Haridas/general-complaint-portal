@@ -97,9 +97,9 @@
             <th>
                 Status
             </th>
-            <th>
+            <!--<th>
                 Approve
-            </th>
+            </th>-->
         </tr>
         <tr th:each="materialRequest, iterStat : ${materialRequests}">
             <td th:text="${iterStat.count}"></td>
@@ -119,9 +119,9 @@
             <td th:text="${materialRequest.material_request_date}"></td>
             <td th:text="${materialRequest.material_details}"></td>
             <td th:text="${materialRequest.material_request_status}"></td>
-            <td>
+            <!--<td>
                 <a th:href="@{/materialRequest/mdm/approve/{id}(id=${materialRequest.material_request_id})}">Approve</a>
-            </td>
+            </td>-->
         </tr>
 
     </table>

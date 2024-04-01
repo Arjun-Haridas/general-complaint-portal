@@ -11,7 +11,8 @@
 </head>
 <body>
 <h2>Work Report</h2>
-<div th:replace="~{navbar :: common-navbar}"></div>
+<!--<div th:replace="~{navbar :: common-navbar}"></div>-->
+<div th:replace="${headerName} :: common-navbar"></div>
 <div>
     <table align="center" border="1">
         <h2>Allocation Details</h2>

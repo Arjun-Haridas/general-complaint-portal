@@ -4,10 +4,8 @@ import com.kseb.generalcomplaintportal.dto.MaterialRequestForm;
 import com.kseb.generalcomplaintportal.model.MaterialIssue;
 import com.kseb.generalcomplaintportal.model.MaterialRequest;
 import com.kseb.generalcomplaintportal.model.MaterialRequestStatus;
-import com.kseb.generalcomplaintportal.repository.MaterialIssueRepository;
-import com.kseb.generalcomplaintportal.repository.MaterialRequestRepository;
-import com.kseb.generalcomplaintportal.repository.MaterialRequestStatusRepository;
-import com.kseb.generalcomplaintportal.repository.WorkAllocationRepository;
+import com.kseb.generalcomplaintportal.model.Staff;
+import com.kseb.generalcomplaintportal.repository.*;
 import jakarta.persistence.Tuple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,26 +34,36 @@ public class MaterialRequestController {
     @Autowired
     private MaterialIssueRepository materialIssueRepository;
 
-    @GetMapping("/material-request")
-    public String showMaterialRequest(Model model) {
-        List<MaterialRequest> materialRequests = materialRequestRepository.findAll();
-        List<Tuple> workAllocDetails = materialRequestRepository.getWorkAllocDetails();
+    @Autowired
+    private StaffRepository staffRepository;
+
+    @GetMapping("/material-request/{staffId}")
+    public String showMaterialRequest(Model model, @PathVariable("staffId") Integer staffId) {
+        List<MaterialRequest> materialRequests = materialRequestRepository.getMaterialRequestsByStaffId(staffId);
+        List<Tuple> workAllocDetails = materialRequestRepository.getWorkAllocDetails(staffId);
         List<Tuple> materialItems = materialRequestRepository.getMaterialItems();
 
         for (MaterialRequest mr : materialRequests) {
             String status = materialRequestStatusRepository.getStatusFrmMaterialRequestId(mr.getMaterial_request_id());
             String material_type = materialRequestRepository.getDetailFrmMaterialItemId(mr.getMaterialItemId());
+
             mr.setMaterial_type(material_type);
             mr.setMaterial_request_status(status);
         }
+        Optional<Staff> staffFrmDB = staffRepository.findById(staffId);
+        Staff staffDtl = staffFrmDB.get();
+        model.addAttribute("staffId", staffDtl.getStaff_id());
+        model.addAttribute("staffName", staffDtl.getFirstName() + " " + staffDtl.getLastName());
+
         model.addAttribute("materialRequests" ,materialRequests);
         model.addAttribute("materialRequest",new MaterialRequest());
         model.addAttribute("workAllocDetails", workAllocDetails);
         model.addAttribute("materialItems", materialItems);
+
         return "material-request";
     }
     @PostMapping("/material-request-submit")
-    public String submitMaterialRequest(MaterialRequest materialRequest, Model model){
+    public String submitMaterialRequest(MaterialRequest materialRequest, @RequestParam("staffId") String staffId, Model model){
         boolean isStatusUpdateRequired = (materialRequest.getMaterial_request_id() == 0) ? true : false;
         MaterialRequest savedMaterialRequest = materialRequestRepository.save(materialRequest);
 
@@ -69,22 +78,36 @@ public class MaterialRequestController {
             materialRequestStatusRepository.save(materialRequestStatus);
         }
 
-        return "redirect:/material-request";
+        return "redirect:/material-request/" + staffId;
     }
 
     @GetMapping("/materialRequest/edit/{id}")
     public String editMaterialRequest(Model model, @PathVariable("id") Integer id ){
         MaterialRequest materialRequest = materialRequestRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid workAllocation Id:" + id));
-        List<MaterialRequest> materialRequests = materialRequestRepository.findAll();
-        List<Tuple> workAllocDetails = materialRequestRepository.getWorkAllocDetails();
+
+        int staffId = materialRequestRepository.getStaffIdFrmMaterialRequest(id);
+        List<MaterialRequest> materialRequests = materialRequestRepository.getMaterialRequestsByStaffId(staffId);
+        List<Tuple> workAllocDetails = materialRequestRepository.getWorkAllocDetails(staffId);
+        List<Tuple> materialItems = materialRequestRepository.getMaterialItems();
+
         for (MaterialRequest mr : materialRequests) {
             String status = materialRequestStatusRepository.getStatusFrmMaterialRequestId(mr.getMaterial_request_id());
+            String material_type = materialRequestRepository.getDetailFrmMaterialItemId(mr.getMaterialItemId());
+
+            mr.setMaterial_type(material_type);
             mr.setMaterial_request_status(status);
         }
+
+        Optional<Staff> staffFrmDB = staffRepository.findById(staffId);
+        Staff staffDtl = staffFrmDB.get();
+        model.addAttribute("staffId", staffDtl.getStaff_id());
+        model.addAttribute("staffName", staffDtl.getFirstName() + " " + staffDtl.getLastName());
+
         model.addAttribute("materialRequests" ,materialRequests);
         model.addAttribute("materialRequest", materialRequest);
         model.addAttribute("workAllocDetails", workAllocDetails);
+        model.addAttribute("materialItems", materialItems);
         return "material-request";
     }
     @GetMapping("/material-issue")
