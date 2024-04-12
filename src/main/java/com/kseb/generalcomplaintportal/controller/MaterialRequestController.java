@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class MaterialRequestController {
         return "material-request";
     }
     @PostMapping("/material-request-submit")
-    public String submitMaterialRequest(MaterialRequest materialRequest, @RequestParam("staffId") String staffId, Model model){
+    public String submitMaterialRequest(MaterialRequest materialRequest, @RequestParam("staffId") String staffId, Model model, RedirectAttributes redirectAttributes){
         boolean isStatusUpdateRequired = (materialRequest.getMaterial_request_id() == 0) ? true : false;
         MaterialRequest savedMaterialRequest = materialRequestRepository.save(materialRequest);
 
@@ -76,8 +77,10 @@ public class MaterialRequestController {
             String staffName = workAllocationRepository.getStaffNameFrmWorkAllocationId(savedMaterialRequest.getWork_alloc_id());
             materialRequestStatus.setMaterial_request_status_updated_by(staffName);
             materialRequestStatusRepository.save(materialRequestStatus);
+            redirectAttributes.addFlashAttribute("materialRequestSuccess", "Material Request submitted successfully");
+        } else {
+            redirectAttributes.addFlashAttribute("materialRequestSuccess", "Material Request updated successfully");
         }
-
         return "redirect:/material-request/" + staffId;
     }
 
@@ -129,7 +132,7 @@ public class MaterialRequestController {
     }
 
     @PostMapping("/material/issue")
-    public String issueMaterial(MaterialIssue materialIssue, Model model){
+    public String issueMaterial(MaterialIssue materialIssue, Model model, RedirectAttributes redirectAttributes){
         boolean isMaterialNotIssued = (materialIssueRepository.getMaterialIssueCountOnMaterialReqId(materialIssue.getMaterial_request_id()) == 0) ? true : false;
         MaterialRequest materialRequest = materialRequestRepository.getMaterialRequestDetails(materialIssue.getMaterial_request_id());
 
@@ -139,6 +142,8 @@ public class MaterialRequestController {
             materialIssue.setMaterial_issued_qty(materialRequest.getMaterial_request_qty());
             materialIssueRepository.save(materialIssue);
         }
+        redirectAttributes.addFlashAttribute("materialIssueSuccess", "Material Issued successfully");
+
 
         return "redirect:/material-issue";
     }

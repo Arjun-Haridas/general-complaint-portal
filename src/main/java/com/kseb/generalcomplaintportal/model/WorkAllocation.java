@@ -18,6 +18,7 @@ public class WorkAllocation {
     private Date work_alloc_date;
     private String staffName;
     private String complaint;
+    private boolean allowEdit;
 
     public WorkAllocation() {
     }
@@ -79,4 +80,11 @@ public class WorkAllocation {
         this.complaint = complaint;
     }
 
+    public boolean isAllowEdit() {
+        return allowEdit;
+    }
+
+    public void setAllowEdit(boolean allowEdit) {
+        this.allowEdit = allowEdit;
+    }
 }

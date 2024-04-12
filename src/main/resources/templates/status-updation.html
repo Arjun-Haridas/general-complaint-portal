@@ -13,6 +13,7 @@
     <header th:replace="~{navbar-lineman :: common-navbar}"></header>
 
     <h2>Status Update</h2>
+    <div th:if="${statusUpdateSuccess}" th:text="${statusUpdateSuccess}" style="color: green;"></div>
     <form th:action="@{/complaint/complaintStatus/submit}" method="post" th:object="${complaintStatus}">
       <input type="hidden" th:field="*{complaint_id}" />
       <input type="hidden" name="staffId" th:value="${staffId}" />

@@ -13,6 +13,8 @@
 <h2>Welcome Administrator</h2>
 <header th:replace="~{navbar :: common-navbar}"></header>
 <h2>New Work Allocation</h2>
+<div th:if="${workAlocSuccess}" th:text="${workAlocSuccess}" style="color: green;"></div>
+
     <form th:action="@{/workallocationsubmit}" method="post" th:object="${workAllocation}">
         <input type="hidden" th:field="*{work_alloc_id}" />
         <div>
@@ -88,7 +90,7 @@
                 <td th:text="${workAllocation.complaint} + ' (' + ${workAllocation.complaint_id} + ')'"></td>
                 <td th:text="${workAllocation.staffName} + ' (' + ${workAllocation.staff_id} + ')'"></td>
                 <td>
-                    <a th:href="@{/workAllocation/edit/{id}(id=${workAllocation.work_alloc_id})}">Edit</a>
+                    <a th:if="${workAllocation.allowEdit}" th:href="@{/workAllocation/edit/{id}(id=${workAllocation.work_alloc_id})}">Edit</a>
                 </td>
             </tr>
 

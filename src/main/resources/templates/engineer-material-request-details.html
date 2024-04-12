@@ -11,6 +11,7 @@
 </head>
 <body>
 <h2>Welcome Executive Engineer</h2>
+<div th:if="${materialReqApproveSuccess}" th:text="${materialReqApproveSuccess}" style="color: green;"></div>
 <div th:replace="~{navbar-engineer :: common-navbar}"></div>
 <div>
     <table align="center" border="1">

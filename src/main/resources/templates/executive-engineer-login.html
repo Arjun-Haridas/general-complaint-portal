@@ -10,6 +10,7 @@
 </head>
 <body>
 <h2>Welcome Executive Engineer</h2>
+<div th:if="${loginSuccess}" th:text="${loginSuccess}" style="color: green;"></div>
 <div th:replace="~{navbar-engineer :: common-navbar}"></div>
 </body>
 </html>

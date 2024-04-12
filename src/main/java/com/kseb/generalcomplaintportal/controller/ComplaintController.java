@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +90,7 @@ public class ComplaintController {
     }
 
     @PostMapping("/submit")
-    public  String submitComplaint(@ModelAttribute ComplaintRegistrationForm form, Model model) {
+    public  String submitComplaint(@ModelAttribute ComplaintRegistrationForm form, Model model, RedirectAttributes redirectAttributes) {
         Complaint complaint;
         ComplaintStatus complaintStatus;
 
@@ -117,11 +118,16 @@ public class ComplaintController {
         complaintStatus.setComplaint_status_updated_by(designationId);
 
         complaintStatusRepository.save(complaintStatus);
+        if (form.getComplaint_id() != 0) {
+            redirectAttributes.addFlashAttribute("complaintSuccess", "Complaint Updated successfully");
+        } else {
+            redirectAttributes.addFlashAttribute("complaintSuccess", "Complaint registered successfully");
+        }
         return "redirect:/complaint/registration/" + designationId;
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteComplaints(@PathVariable Long id) {
+    public String deleteComplaints(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         int desigId = complaintStatusRepository.getDesignationIdFrmComplaint(Math.toIntExact(id));
         Integer workAllocationId = workAllocationRepository.getWorkAllocationIdFrmComplaint(Math.toIntExact(id));
 
@@ -138,6 +144,7 @@ public class ComplaintController {
 
         complaintStatusRepository.deleteByComplaintId(Math.toIntExact(id));
         complaintRepository.deleteById(id);
+        redirectAttributes.addFlashAttribute("complaintDeletetSuccess", "Complaint Deleted successfully");
 
         return "redirect:/complaint/registration/" + desigId;
     }
@@ -182,11 +189,13 @@ public class ComplaintController {
     }
 
     @PostMapping("/complaintStatus/submit")
-    public  String submitComplaintStatus(@ModelAttribute ComplaintStatus complaintStatus, @RequestParam("staffId") String staffId, Model model) {
+    public  String submitComplaintStatus(@ModelAttribute ComplaintStatus complaintStatus, @RequestParam("staffId") String staffId, Model model, RedirectAttributes redirectAttributes) {
         ComplaintStatus complaintStatusDtls = complaintStatusRepository.getComplaintStatusDetails(complaintStatus.getComplaint_id());
         complaintStatusDtls.setComplaint_status(complaintStatus.getSelectedStatus());
         complaintStatusDtls.setComplaint_status_details(complaintStatus.getSelectedStatus());
         complaintStatusRepository.save(complaintStatusDtls);
+        redirectAttributes.addFlashAttribute("workAllocStatusEditSuccess", "Work Allocation Status Updated Successfully");
+        redirectAttributes.addFlashAttribute("statusUpdateSuccess", "Work Allocation Status Updated Successfully");
         return "redirect:/lineman-work-allocation/" + staffId;
     }
 

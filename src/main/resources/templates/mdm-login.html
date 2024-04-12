@@ -10,6 +10,7 @@
 </head>
 <body>
 <h2>Welcome Material Depo Manager</h2>
+<div th:if="${loginSuccess}" th:text="${loginSuccess}" style="color: green;"></div>
 <div th:replace="~{navbar-manager :: common-navbar}"></div>
 </body>
 </html>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,22 +38,28 @@ public class StaffController {
     }
 
     @PostMapping("/login")
-    public  String loginStaff(@ModelAttribute Staff staff, Model model) {
+    public  String loginStaff(@ModelAttribute Staff staff, RedirectAttributes redirectAttributes) {
         Staff staffFrmDB = staffRepository.findByUsername(staff.getUsername());
         String pwdFrmDB = (staffFrmDB != null) ? staffFrmDB.getPassword() : "";
         int desigFrmDB = (staffFrmDB != null) ? staffFrmDB.getDesign_id() : 0;
         if (staffFrmDB != null && pwdFrmDB.equals(staff.getPassword()) && desigFrmDB == staff.getDesign_id()) {
             if (desigFrmDB == 1 ) {
+                redirectAttributes.addFlashAttribute("loginSuccess", "Admin logged in successfully");
                 return "redirect:/admin-login/" + desigFrmDB;
             } else if (desigFrmDB == 2) {
+                redirectAttributes.addFlashAttribute("loginSuccess", "Lineman logged in successfully");
                 return "redirect:/lineman-login/" + desigFrmDB + "/" + staffFrmDB.getStaff_id();
             } else if (desigFrmDB == 3) {
+                redirectAttributes.addFlashAttribute("loginSuccess", "Engineer logged in successfully");
                 return "redirect:/executive-engineer-login/" + desigFrmDB;
             }else if (desigFrmDB == 4) {
+                redirectAttributes.addFlashAttribute("loginSuccess", "Manager logged in successfully");
                 return "redirect:/mdm-login/" + desigFrmDB;
+            } else {
+                redirectAttributes.addFlashAttribute("loginError", "Please select exact previlage");
             }
         } else {
-            model.addAttribute("loginError", "Invalid username or password");
+            redirectAttributes.addFlashAttribute("loginError", "Please enter valid credentials");
             return "redirect:/home";
         }
         return "redirect:/home";
@@ -88,12 +95,14 @@ public class StaffController {
         List<Designation> designations = designationRepository.findAll();
         model.addAttribute("designations", designations);
         model.addAttribute("staff", new Staff());
+
         return "staff-registration";
     }
 
     @PostMapping("/register")
-    public  String registerStaff(Staff staff, Model model) {
+    public  String registerStaff(Staff staff, Model model, RedirectAttributes redirectAttributes) {
         staffRepository.save(staff);
+        redirectAttributes.addFlashAttribute("RegistrationSuccess", "Registered Successfully");
         return "redirect:/home";
     }
 

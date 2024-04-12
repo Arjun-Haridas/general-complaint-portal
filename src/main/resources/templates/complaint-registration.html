@@ -14,6 +14,9 @@
     <header th:replace="~{navbar :: common-navbar}"></header>
 
     <h2>New Complaint Registration</h2>
+    <div th:if="${complaintSuccess}" th:text="${complaintSuccess}" style="color: green;"></div>
+    <div th:if="${complaintDeletetSuccess}" th:text="${complaintDeletetSuccess}" style="color: green;"></div>
+    <div th:if="${complaintEditSuccess}" th:text="${complaintEditSuccess}" style="color: green;"></div>
     <form th:action="@{/complaint/submit}" method="post" th:object="${complaint}">
         <input type="hidden" th:field="*{complaint_id}" />
         <input type="hidden" th:field="*{complaint_status_updated_by}" />
@@ -32,8 +35,8 @@
                         Consumer Name:
                     </td>
                     <td>
-                        <select th:field="*{consumer_kseb_id}">
-                            <option th:value="0">--select--</option>
+                        <select th:field="*{consumer_kseb_id}" required>
+                            <option th:value="0" selected disabled>--select--</option>
                             <option th:each="consumerDetail : ${consumerDetails}" th:value="${consumerDetail.get('kseb_id')}" th:text="${consumerDetail.get('first_name')} + '(' + ${consumerDetail.get('kseb_id')} + ')'"></option>
                         </select>
                         <!--<input type="text" th:field="*{consumer_kseb_id}">-->

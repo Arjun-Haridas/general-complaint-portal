@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,8 @@ public class WorkAllocationController {
         for (WorkAllocation wa : workAllocations) {
             wa.setComplaint(complaintRepository.getComplaintFrmComplaintId(wa.getComplaint_id()));
             wa.setStaffName(staffRepository.getStaffNameFrmId(wa.getStaff_id()));
+            boolean showEdit = (workAllocationRepository.showWorkAllocEdit(wa.getComplaint_id()) == 0) ? false : true;
+            wa.setAllowEdit(showEdit);
         }
         List<Tuple> complaintDetails = workAllocationRepository.getComplaintDetails();
         List<Tuple> linemanDetails = workAllocationRepository.getLinemanDetails();
@@ -52,8 +55,9 @@ public class WorkAllocationController {
     }
 
     @PostMapping("/workallocationsubmit")
-    public String submitWorkAllocation(WorkAllocation workAllocation, Model model){
+    public String submitWorkAllocation(WorkAllocation workAllocation, Model model, RedirectAttributes redirectAttributes){
         workAllocationRepository.save(workAllocation);
+        redirectAttributes.addFlashAttribute("workAlocSuccess", "Work allocated successfully");
         return "redirect:/allocation";
     }
 
@@ -65,9 +69,11 @@ public class WorkAllocationController {
         for (WorkAllocation wa : workAllocations) {
             wa.setComplaint(complaintRepository.getComplaintFrmComplaintId(wa.getComplaint_id()));
             wa.setStaffName(staffRepository.getStaffNameFrmId(wa.getStaff_id()));
+            boolean showEdit = (workAllocationRepository.showWorkAllocEdit(wa.getComplaint_id()) == 0) ? false : true;
+            wa.setAllowEdit(showEdit);
         }
 
-        List<Tuple> complaintDetails = workAllocationRepository.getComplaintDetails();
+        List<Tuple> complaintDetails = workAllocationRepository.getComplaintDetailsOnEdit(id);
         List<Tuple> linemanDetails = workAllocationRepository.getLinemanDetails();
         model.addAttribute("workAllocations", workAllocations);
         model.addAttribute("workAllocation", workAllocation);
@@ -86,6 +92,7 @@ public class WorkAllocationController {
         model.addAttribute("staffName", staffDtl.getFirstName() + " " + staffDtl.getLastName());
 
         model.addAttribute("workAllocationForms", workAllocationForms);
+
         return "lineman-work-allocation";
     }
 

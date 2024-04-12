@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.util.List;
@@ -43,8 +44,15 @@ public class PaymentController {
         return "payment";
     }
     @PostMapping("/payment-submit")
-    public String submitPayment(Payment payment, @RequestParam("staffId") String staffId, Model model){
+    public String submitPayment(Payment payment, @RequestParam("staffId") String staffId, Model model, RedirectAttributes redirectAttributes){
+        boolean isEdit = (payment.getPayment_bill_id() == 0) ? false : true;
         paymentRepository.save(payment);
+        if (isEdit) {
+            redirectAttributes.addFlashAttribute("paymentDetailsSuccess", "Payment details updated successfully");
+        }
+        else {
+            redirectAttributes.addFlashAttribute("paymentDetailsSuccess", "Payment details saved successfully");
+        }
         return "redirect:/payment/" + staffId;
     }
     @GetMapping("/payment/edit/{id}")
@@ -54,10 +62,16 @@ public class PaymentController {
         int staffId = paymentRepository.getStaffIdFrmPayment(id);
 
         List<Payment> payments = paymentRepository.getPaymentsByStaffId(staffId);
-        List<Tuple> workAllocDetails = paymentRepository.getWorkAllocDetails(staffId);
+        List<Tuple> workAllocDetails = paymentRepository.getWorkAllocDetailsOnEdit(staffId, id);
         model.addAttribute("payments" ,payments);
         model.addAttribute("payment",payment);
         model.addAttribute("workAllocDetails", workAllocDetails);
+
+        Optional<Staff> staffFrmDB = staffRepository.findById(staffId);
+        Staff staffDtl = staffFrmDB.get();
+        model.addAttribute("staffId", staffDtl.getStaff_id());
+        model.addAttribute("staffName", staffDtl.getFirstName() + " " + staffDtl.getLastName());
+
         return "payment";
     }
     @GetMapping("/view-payment-report/{headerName}")
@@ -92,8 +106,10 @@ public class PaymentController {
         return "payment-manager";
     }
     @PostMapping("/payment-manager-submit")
-    public String submitMangerPayment(Payment payment, Model model){
+    public String submitMangerPayment(Payment payment, Model model, RedirectAttributes redirectAttributes){
         paymentRepository.save(payment);
+        redirectAttributes.addFlashAttribute("paymentDetailsSuccess", "Payment details saved successfully");
+
         return "redirect:/payment-manager";
     }
     @GetMapping("/payment/manager/edit/{id}")

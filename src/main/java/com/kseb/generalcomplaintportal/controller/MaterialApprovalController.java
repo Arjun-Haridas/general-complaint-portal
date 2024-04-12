@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,13 +169,14 @@ public class MaterialApprovalController {
     }*/
 
     @PostMapping("/material-request/mdm-approval")
-    public  String submitMDMApproval(@ModelAttribute MaterialRequestStatus materialRequestStatus, Model model) {
+    public  String submitMDMApproval(@ModelAttribute MaterialRequestStatus materialRequestStatus, Model model, RedirectAttributes redirectAttributes) {
         MaterialRequestStatus ms1 = materialRequestStatusRepository.getMaterialStatusDetails(materialRequestStatus.getMaterialRequestId());
         materialRequestStatus.setMaterial_request_status_id(ms1.getMaterial_request_status_id());
         materialRequestStatus.setMaterial_request_status("EE Approval Waiting");
         materialRequestStatus.setMaterial_request_status_updated_by("Manager");
         materialRequestStatus.setMaterial_request_status_details("Waiting for approval from Executive Engineer");
         materialRequestStatusRepository.save(materialRequestStatus);
+        redirectAttributes.addFlashAttribute("materialApproveSuccess", "Material Request Approved Successfully");
         return "redirect:/manager-material-request-details";
     }
 
@@ -190,13 +192,14 @@ public class MaterialApprovalController {
     }
 
     @PostMapping("/material-request/ee-approval")
-    public  String submitEEApproval(@ModelAttribute MaterialRequestStatus materialRequestStatus, Model model) {
+    public  String submitEEApproval(@ModelAttribute MaterialRequestStatus materialRequestStatus, Model model, RedirectAttributes redirectAttributes) {
         MaterialRequestStatus ms1 = materialRequestStatusRepository.getMaterialStatusDetails(materialRequestStatus.getMaterialRequestId());
         materialRequestStatus.setMaterial_request_status_id(ms1.getMaterial_request_status_id());
         materialRequestStatus.setMaterial_request_status("EE Approved");
         materialRequestStatus.setMaterial_request_status_updated_by("Engineer");
         materialRequestStatus.setMaterial_request_status_details("Executive Engineer Approved");
         materialRequestStatusRepository.save(materialRequestStatus);
+        redirectAttributes.addFlashAttribute("materialReqApproveSuccess", "Material Request Approved Successfully");
         return "redirect:/engineer-material-request-details";
     }
 

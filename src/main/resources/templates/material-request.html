@@ -17,6 +17,8 @@
     <div>
         <table align="center" border="2" >
             <h2>New Material Request</h2>
+            <div th:if="${materialRequestSuccess}" th:text="${materialRequestSuccess}" style="color: green;"></div>
+
             <tr>
                 <td>
                     Date:

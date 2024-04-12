@@ -12,9 +12,13 @@ import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
-    @Query(value = "SELECT work_alloc_id as work_alloc_id FROM kseb.work_allocation where staff_id = :staff_id",
+    @Query(value = "SELECT work_alloc_id as work_alloc_id FROM kseb.work_allocation where staff_id = :staff_id and work_alloc_id not in (select work_alloc_id FROM kseb.payment_bill)",
             nativeQuery = true)
     List<Tuple> getWorkAllocDetails(@Param("staff_id") int staff_id);
+
+    @Query(value = "SELECT work_alloc_id as work_alloc_id FROM kseb.work_allocation where staff_id = :staff_id and ((work_alloc_id not in (select work_alloc_id FROM kseb.payment_bill)) or work_alloc_id in (select work_alloc_id from kseb.payment_bill where payment_bill_id = :payment_bill_id))",
+            nativeQuery = true)
+    List<Tuple> getWorkAllocDetailsOnEdit(@Param("staff_id") int staff_id, @Param("payment_bill_id") int payment_bill_id);
 
     @Query(value = "SELECT work_alloc_id as work_alloc_id FROM kseb.work_allocation",
             nativeQuery = true)
